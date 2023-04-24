@@ -1,81 +1,55 @@
 #include "monty.h"
 
-void monty_rotl(stack_t **stack, unsigned int line_number);
-void monty_rotr(stack_t **stack, unsigned int line_number);
-void monty_stack(stack_t **stack, unsigned int line_number);
-void monty_queue(stack_t **stack, unsigned int line_number);
-
 /**
- * monty_rotl - Rotates the top value of a stack_t linked list to the bottom.
- * @stack: A pointer to the top mode node of a stack_t linked list.
- * @line_number: The current working line number of a Monty bytecodes file.
- */
-void monty_rotl(stack_t **stack, unsigned int line_number)
+* f_pall - function that prints everything in the stack
+* @head: double head pointer to the stack
+* @counter: unused line count
+*
+* Return: nothing
+*/
+void f_pall(stack_t **head, unsigned int counter)
 {
-	stack_t *top, *bottom;
+	stack_t *h;
+	(void)counter;
 
-	if ((*stack)->next == NULL || (*stack)->next->next == NULL)
+	h = *head;
+	if (h == NULL)
 		return;
-
-	top = (*stack)->next;
-	bottom = (*stack)->next;
-	while (bottom->next != NULL)
-		bottom = bottom->next;
-
-	top->next->prev = *stack;
-	(*stack)->next = top->next;
-	bottom->next = top;
-	top->next = NULL;
-	top->prev = bottom;
-
-	(void)line_number;
+	while (h)
+	{
+		printf("%d\n", h->n);
+		h = h->next;
+	}
 }
 
 /**
- * monty_rotr - Rotates the bottom value of a stack_t linked list to the top.
- * @stack: A pointer to the top mode node of a stack_t linked list.
- * @line_number: The current working line number of a Monty bytecodes file.
- */
-void monty_rotr(stack_t **stack, unsigned int line_number)
+* f_swap - function that swaps the top two elements of the stack
+* @head: head of stack
+* @counter: line count
+*
+* Return: nothing
+*/
+void f_swap(stack_t **head, unsigned int counter)
 {
-	stack_t *top, *bottom;
+	stack_t *h;
+	int length = 0, temp;
 
-	if ((*stack)->next == NULL || (*stack)->next->next == NULL)
-		return;
-
-	top = (*stack)->next;
-	bottom = (*stack)->next;
-	while (bottom->next != NULL)
-		bottom = bottom->next;
-
-	bottom->prev->next = NULL;
-	(*stack)->next = bottom;
-	bottom->prev = *stack;
-	bottom->next = top;
-	top->prev = bottom;
-
-	(void)line_number;
+	h = *head;
+	while (h)
+	{
+		h = h->next;
+		length++;
+	}
+	if (length < 2)
+	{
+		fprintf(stderr, "L%d: can't swap, stack too short\n", counter);
+		fclose(bus.file);
+		free(bus.content);
+		free_stack(*head);
+		exit(EXIT_FAILURE);
+	}
+	h = *head;
+	temp = h->n;
+	h->n = h->next->n;
+	h->next->n = temp;
 }
-
-/**
- * monty_stack - Converts a queue to a stack.
- * @stack: A pointer to the top mode node of a stack_t linked list.
- * @line_number: The current working line number of a Monty bytecodes file.
- */
-void monty_stack(stack_t **stack, unsigned int line_number)
-{
-	(*stack)->n = STACK;
-	(void)line_number;
-}
-
-/**
- * monty_queue - Converts a stack to a queue.
- * @stack: A pointer to the top mode node of a stack_t linked list.
- * @line_number: The current working line number of a Monty bytecodes file.
- */
-void monty_queue(stack_t **stack, unsigned int line_number)
-{
-	(*stack)->n = QUEUE;
-	(void)line_number;
-}
-
